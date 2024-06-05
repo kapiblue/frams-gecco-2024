@@ -6,7 +6,8 @@ from deap import creator, base, tools, algorithms
 import sys
 
 sys.path.append('..')
-
+# Make sure to import the FramsticksLibCompetition from the repo
+FramsticksLibCompetition = __import__('frams-gecco-2024.FramsticksLibCompetition')
 # Use FramsticksLibCompetition instead of the default FramsticksLib
 from FramsticksLibCompetition import FramsticksLibCompetition as FramsticksLib
 
