@@ -1,2 +1,4 @@
 hofs/
 logs/
+
+**/*.pyc
