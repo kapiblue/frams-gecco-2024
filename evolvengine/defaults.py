@@ -28,7 +28,7 @@ def genotype_within_constraint(
 
 def frams_evaluate(
     frams_lib: types.FramsticksLibInterface,
-    args: types.Args,
+    args: types.RunConfig,
     individual: types.Individual,
 ) -> typing.Union[list[float], float]:
     # fitness of -1 is intended to discourage further propagation of this genotype via selection ("this genotype is very poor")
@@ -108,7 +108,7 @@ def frams_getsimplest(
 
 
 def setup_toolbox(
-    frams_lib: types.FramsticksLibInterface, args: types.Args
+    frams_lib: types.FramsticksLibInterface, args: types.RunConfig
 ) -> deap.base.Toolbox:
     deap.creator.create("FitnessMax", deap.base.Fitness, weights=[1.0] * len(args.opt))
     deap.creator.create("Individual", list, fitness=deap.creator.FitnessMax)
