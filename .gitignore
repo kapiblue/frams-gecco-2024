@@ -1,4 +1,5 @@
 hofs/
 logs/
+results/
 
 **/*.pyc

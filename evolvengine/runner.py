@@ -59,4 +59,4 @@ class EvolutionRunner:
             "time_s": time_taken,
         }
         with open(self.config.out, "w") as outfile:
-            json.dump(result, outfile)
+            json.dump(result, outfile, default=str)
