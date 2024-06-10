@@ -8,7 +8,7 @@ for i in 0 1
 do
    for j in {1..10}
    do
-      python FramsticksEvolutionComp.py -path $lib_path \
+      python framspy/FramsticksEvolutionComp.py -path $lib_path \
       -sim "eval-allcriteria.sim;deterministic.sim;recording-body-coords.sim" \
       -opt COGpath \
       -genformat $i \
