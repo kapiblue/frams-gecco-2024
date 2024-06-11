@@ -25,6 +25,7 @@ def setup_lib(config: evolvengine.types.RunConfig) -> FramsticksLib:
 def main():
     config = evolvengine.types.RunConfig.from_args()
     lib = setup_lib(config)
+    lib.TEST_FUNCTION = config.opt_func
     mutator = evolvengine.mutator.VaryingStrengthMutator(
         mutate_func=evolvengine.defaults.frams_mutate, upper_bound=config.mutator_ub
     )

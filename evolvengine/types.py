@@ -62,6 +62,7 @@ class RunConfig:
     meta: MetaAlgorithm
     lambda_: int
     mutator_ub: float
+    opt_func: int
 
     def __post_init__(self):
         if not isinstance(self.opt, list):
@@ -186,6 +187,12 @@ class RunConfig:
             type=float,
             default=1,
             help="Upper bound for mutation strenth. Default: 1.0 (strenth will not increase)",
+        )
+        parser.add_argument(
+            "-opt_func",
+            type=int,
+            default=3,
+            help="Optimization function. Default: 3 (Same default as in FramsticksLibCompetition).",
         )
         args = parser.parse_args()
         return cls(**vars(args))
