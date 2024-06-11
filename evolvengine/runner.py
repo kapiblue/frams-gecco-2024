@@ -16,21 +16,18 @@ class EvolutionRunner:
         self,
         lib: type[types.FramsticksLibInterface],
         config: types.RunConfig,
-        toolbox_processor: types.ToolboxProcessor = lambda tb, *_: tb,
+        toolbox: deap.base.Toolbox,
+        stats: deap.tools.Statistics,
     ):
         lib.DETERMINISTIC = True
         random.seed(config.seed)
         np.random.seed(config.seed)
         self.frams_lib = lib(config.path, None, config.sim)
         toolbox = defaults.setup_toolbox(self.frams_lib, config)
-        self.toolbox = toolbox_processor(toolbox, self.frams_lib, config)
+        self.toolbox = toolbox
         self.hof = deap.tools.HallOfFame(config.hof_size)
         self.config = config
-        self.stats = deap.tools.Statistics(lambda ind: ind.fitness.values)
-        self.stats.register("avg", np.mean)
-        self.stats.register("stddev", np.std)
-        self.stats.register("min", np.min)
-        self.stats.register("max", np.max)
+        self.stats = stats
 
     def run(self):
         pop = self.toolbox.population(n=self.config.popsize)

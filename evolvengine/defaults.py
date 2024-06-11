@@ -1,5 +1,6 @@
 import typing
 
+import numpy as np
 import deap.base
 import deap.tools
 import deap.creator
@@ -135,3 +136,13 @@ def setup_toolbox(
     if len(args.opt) > 1:
         toolbox.register("select", deap.tools.selNSGA2)
     return toolbox
+
+
+def setup_stats() -> deap.tools.Statistics:
+    stats = deap.tools.Statistics(lambda ind: ind.fitness.values)
+    stats.register("avg", np.mean)
+    stats.register("stddev", np.std)
+    stats.register("min", np.min)
+    stats.register("max", np.max)
+
+    return stats
