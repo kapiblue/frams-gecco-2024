@@ -22,6 +22,7 @@ class HistoryEntry:
     stddev: float
     min: float
     max: float
+    m_strength: float = 1.0
 
 
 @dataclasses.dataclass

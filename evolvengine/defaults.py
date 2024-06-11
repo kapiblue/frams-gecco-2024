@@ -109,17 +109,19 @@ def frams_getsimplest(
 
 
 def setup_toolbox(
-    frams_lib: types.FramsticksLibInterface, args: types.RunConfig
+    frams_lib: types.FramsticksLibInterface, config: types.RunConfig
 ) -> deap.base.Toolbox:
-    deap.creator.create("FitnessMax", deap.base.Fitness, weights=[1.0] * len(args.opt))
+    deap.creator.create(
+        "FitnessMax", deap.base.Fitness, weights=[1.0] * len(config.opt)
+    )
     deap.creator.create("Individual", list, fitness=deap.creator.FitnessMax)
     toolbox = deap.base.Toolbox()
     toolbox.register(
         "attr_simplest_genotype",
         frams_getsimplest,
         frams_lib,
-        args.genformat,
-        args.initialgenotype,
+        config.genformat,
+        config.initialgenotype,
     )
     toolbox.register(
         "individual",
@@ -129,11 +131,11 @@ def setup_toolbox(
         1,
     )
     toolbox.register("population", deap.tools.initRepeat, list, toolbox.individual)
-    toolbox.register("evaluate", frams_evaluate, frams_lib, args)
+    toolbox.register("evaluate", frams_evaluate, frams_lib, config)
     toolbox.register("mate", frams_crossover, frams_lib)
     toolbox.register("mutate", frams_mutate, frams_lib)
-    toolbox.register("select", deap.tools.selTournament, tournsize=args.tournament)
-    if len(args.opt) > 1:
+    toolbox.register("select", deap.tools.selTournament, tournsize=config.tournament)
+    if len(config.opt) > 1:
         toolbox.register("select", deap.tools.selNSGA2)
     return toolbox
 

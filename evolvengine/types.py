@@ -61,6 +61,7 @@ class RunConfig:
     out: str | None
     meta: MetaAlgorithm
     lambda_: int
+    mutator_ub: float
 
     def __post_init__(self):
         if not isinstance(self.opt, list):
@@ -180,6 +181,12 @@ class RunConfig:
             default=0.8,
             help="lambda parameter for evolutionary algorithm. Default: 1",
         )
+        parser.add_argument(
+            "-mutator_ub",
+            type=float,
+            default=1,
+            help="Upper bound for mutation strenth. Default: 1.0 (strenth will not increase)",
+        )
         args = parser.parse_args()
         return cls(**vars(args))
 
@@ -188,3 +195,4 @@ Individual = list[str]  # 1-sized string genotype
 ToolboxProcessor = typing.Callable[
     [deap.base.Toolbox, FramsticksLibInterface, RunConfig], deap.base.Toolbox
 ]
+Mutator = typing.Callable[[FramsticksLibInterface, Individual], tuple[Individual]]
