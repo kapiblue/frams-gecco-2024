@@ -83,6 +83,7 @@ def convert_to_dataframe(grouped_results: dict[str, list[RunResult]]) -> pd.Data
                         "stddev": entry.stddev,
                         "min": entry.min,
                         "max": entry.max,
+                        "m_strength": entry.m_strength,
                         "time_s": run_res.time_s,
                     }
                 )
