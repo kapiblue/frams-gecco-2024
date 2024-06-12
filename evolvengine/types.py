@@ -23,6 +23,16 @@ class FramsticksLibInterface(typing.Protocol):
     def crossOver(self, genotype1: str, genotype2: str) -> str: ...
     def mutate(self, genotypes: list[str]) -> list[str]: ...
     def getSimplest(self, genetic_format: str) -> str: ...
+    def getRandomGenotype(
+        self,
+        initial_genotype: str,
+        parts_min: int,
+        parts_max: int,
+        neurons_min: int,
+        neurons_max: int,
+        iter_max: int,
+        return_even_if_failed: bool,
+    ) -> str: ...
 
 
 class EvolutionaryAlgorithm(typing.Protocol):
@@ -63,6 +73,7 @@ class RunConfig:
     lambda_: int
     mutator_ub: float
     opt_func: int
+    rand_prob: float
 
     def __post_init__(self):
         if not isinstance(self.opt, list):
@@ -193,6 +204,12 @@ class RunConfig:
             type=int,
             default=3,
             help="Optimization function. Default: 3 (Same default as in FramsticksLibCompetition).",
+        )
+        parser.add_argument(
+            "-rand_prob",
+            type=float,
+            default=0.0,
+            help="Probability of randomizing individual. Default: 0.0 (no randomization)",
         )
         args = parser.parse_args()
         return cls(**vars(args))

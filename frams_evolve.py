@@ -7,6 +7,7 @@ import evolvengine.types
 import evolvengine.algorithms
 import evolvengine.defaults
 import evolvengine.mutator
+import evolvengine.randomizer
 
 sys.path.append("..")
 
@@ -29,8 +30,11 @@ def main():
     mutator = evolvengine.mutator.VaryingStrengthMutator(
         mutate_func=evolvengine.defaults.frams_mutate, upper_bound=config.mutator_ub
     )
+    randomizer = evolvengine.randomizer.Randomizer(
+        probability=config.rand_prob, lib=lib, iter_max=100
+    )
     toolbox = evolvengine.defaults.setup_toolbox(lib, config)
-    toolbox.register("mutate", mutator.mutate, lib)
+    toolbox.register("mutate", lambda x: randomizer.randomize(mutator.mutate(lib, x)))
     stats = evolvengine.defaults.setup_stats()
     stats.register("m_strength", mutator.update_strength)
     runner = evolvengine.runner.EvolutionRunner(config, toolbox, stats)
