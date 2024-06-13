@@ -9,6 +9,7 @@ from evolalg_steps.base.union_step import UnionStep
 from evolalg_steps.selection.selection import Selection
 from evolalg_steps.utils.stable_generation import StableGeneration
 import logging
+import pandas as pd
 
 class Experiment:
     def __init__(self, init_population: List[Callable],
@@ -17,7 +18,8 @@ class Experiment:
                  generation_modification: List[Union[Callable, Step]],
                  end_steps: List[Union[Callable, Step]],
                  population_size,
-                 checkpoint_path=None, checkpoint_interval=None):
+                 checkpoint_path=None, checkpoint_interval=None,
+                 log_savefile=None):
 
         self.init_population = init_population
         self.running_time = 0
@@ -33,6 +35,8 @@ class Experiment:
         self.checkpoint_interval = checkpoint_interval
         self.generation = 0
         self.population = None
+        self.fitness_log = []
+        self.log_savefile = log_savefile
 
     def init(self):
         self.generation = 0
@@ -53,12 +57,20 @@ class Experiment:
             self.generation = i
             self.population = self.step(self.population)
             self.population = self.generation_modification(self.population)
-
             self.running_time += time.time() - start_time
+
+            for individual in self.population:
+                fitness = individual.fitness  # Assuming each individual has a fitness attribute
+                self.fitness_log.append([i, *fitness.getValues()])
+            
             if (self.checkpoint_path is not None
                     and self.checkpoint_interval is not None
                     and i % self.checkpoint_interval == 0):
                 self.save_checkpoint()
+        df = pd.DataFrame(self.fitness_log, columns=["generation", "dissim", "cog"])
+        df.to_csv(self.log_savefile)
+        with open(self.log_savefile[:-4] + "-time.txt", "w") as time_file:
+            time_file.write(str(self.running_time))
 
         self.population = self.end_steps(self.population)
 

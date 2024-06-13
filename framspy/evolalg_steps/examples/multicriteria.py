@@ -17,7 +17,10 @@ import numpy as np
 from deap import base
 from deap import tools
 
-from FramsticksLib import FramsticksLib
+# import the competition file
+from FramsticksLibCompetition import FramsticksLibCompetition as FramsticksLib
+#from FramsticksLib import FramsticksLib
+
 from evolalg_steps.base.lambda_step import LambdaStep
 from evolalg_steps.base.step import Step
 from evolalg_steps.dissimilarity.frams_dissimilarity import FramsDissimilarity
@@ -83,6 +86,8 @@ def parseArguments():
     parser.add_argument('-checkpoint_path', required=False, default=None, help="Path to the checkpoint file")
     parser.add_argument('-checkpoint_interval', required=False, type=int, default=100, help="Checkpoint interval")
     parser.add_argument('-debug', dest='debug', action='store_true', help="Prints names of steps as they are executed")
+    parser.add_argument("-log_savefile", required=False, help="If set, the log will be saved in this location. Must be .pkl",
+                            type=str)
     parser.set_defaults(debug=False)
     return parser.parse_args()
 
@@ -134,7 +139,7 @@ class ReplaceWithHallOfFame(Step):
 
 
 class DeapFitness(base.Fitness):
-    weights = (1, 1)
+    weights = (5, 1)
 
     def __init__(self, *args, **kwargs):
         super(DeapFitness, self).__init__(*args, **kwargs)
@@ -293,7 +298,8 @@ def create_experiment():
                             end_steps=end_stages,
                             population_size=parsed_args.popsize,
                             checkpoint_path=parsed_args.checkpoint_path,
-                            checkpoint_interval=parsed_args.checkpoint_interval
+                            checkpoint_interval=parsed_args.checkpoint_interval,
+                            log_savefile=parsed_args.log_savefile
                             )
     return experiment
 
