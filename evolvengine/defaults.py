@@ -1,9 +1,9 @@
 import typing
 
-import numpy as np
 import deap.base
-import deap.tools
 import deap.creator
+import deap.tools
+import numpy as np
 
 from . import types
 
@@ -108,6 +108,12 @@ def frams_getsimplest(
     )
 
 
+def frams_dissimilarity(
+    frams_lib: types.FramsticksLibInterface, genotype_list: list[str], method: int
+) -> np.ndarray:
+    return frams_lib.dissimilarity(genotype_list, method)
+
+
 def setup_toolbox(
     frams_lib: types.FramsticksLibInterface, config: types.RunConfig
 ) -> deap.base.Toolbox:
@@ -135,6 +141,12 @@ def setup_toolbox(
     toolbox.register("mate", frams_crossover, frams_lib)
     toolbox.register("mutate", frams_mutate, frams_lib)
     toolbox.register("select", deap.tools.selTournament, tournsize=config.tournament)
+    toolbox.register(
+        "dissimilarity",
+        frams_dissimilarity,
+        frams_lib,
+        method=config.dissimilarity_method,
+    )
     if len(config.opt) > 1:
         toolbox.register("select", deap.tools.selNSGA2)
     return toolbox

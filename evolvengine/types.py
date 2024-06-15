@@ -1,18 +1,21 @@
 from __future__ import annotations
 
 import argparse
-import typing
 import dataclasses
-
 import enum
+import typing
+from typing import List
+
 import deap.base
 import deap.tools
+import numpy as np
 
 
 class MetaAlgorithm(enum.Enum):
     SIMPLE = "SIMPLE"
     MU_PLUS_LAMBDA = "MU_PLUS_LAMBDA"
     MU_COMMA_LAMBDA = "MU_COMMA_LAMBDA"
+    DPGA = "DPGA"
 
     def __str__(self):
         return self.value
@@ -33,6 +36,7 @@ class FramsticksLibInterface(typing.Protocol):
         iter_max: int,
         return_even_if_failed: bool,
     ) -> str: ...
+    def dissimilarity(self, genotype_list: List[str], method: int) -> np.ndarray: ...
 
 
 class EvolutionaryAlgorithm(typing.Protocol):
@@ -74,6 +78,7 @@ class RunConfig:
     mutator_ub: float
     opt_func: int
     rand_prob: float
+    dissimilarity_method: int
 
     def __post_init__(self):
         if not isinstance(self.opt, list):
@@ -211,6 +216,13 @@ class RunConfig:
             default=0.0,
             help="Probability of randomizing individual. Default: 0.0 (no randomization)",
         )
+        parser.add_argument(
+            "-dissimilarity_method",
+            type=int,
+            default=0,
+            help="Method of dissimilarity calculation, default: 0 (SimilMeasureGreedy)",
+        )
+
         args = parser.parse_args()
         return cls(**vars(args))
 

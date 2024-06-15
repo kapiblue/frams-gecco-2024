@@ -1,6 +1,7 @@
 import deap.algorithms
 
 from . import types
+from .experiments.dpga import dpga
 
 
 def resolve_algorithm(
@@ -17,4 +18,6 @@ def resolve_algorithm(
         return lambda *args, **kwargs: deap.algorithms.eaMuCommaLambda(
             *args, **kwargs, mu=config.popsize, lambda_=lambda_param
         )
+    if config.meta == types.MetaAlgorithm.DPGA:
+        return dpga
     raise ValueError(f"Unknown algorithm: {config.meta}")
