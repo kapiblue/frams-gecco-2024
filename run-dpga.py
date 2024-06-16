@@ -8,12 +8,12 @@ import tqdm
 import paths
 
 N_REPS = 10
-ALGS = ["SIMPLE", "DPGA"]
-REPRESENTATIONS = ["0", "1"]
+ALGS = ["DPGA"]
+REPRESENTATIONS = ["0"]
 
 
 def resolve_filename(alg: str, repr: str, repeat: int):
-    return paths.RESULTS_DIR / "dpga" / f"{alg}-{repr}-{repeat}.json"
+    return paths.RESULTS_DIR / "dpga_defined" / f"{alg}-{repr}-{repeat}.json"
 
 
 def run_command(alg: str, repr: str, repeat: int):
@@ -23,7 +23,7 @@ def run_command(alg: str, repr: str, repeat: int):
         "-path",
         paths.FRAMLIB_DIR,
         "-sim",
-        f"eval-allcriteria.sim;deterministic.sim;recording-body-coords-mod.sim",
+        f"eval-allcriteria.sim;deterministic.sim;recording-body-coords.sim",
         "-opt",
         "COGpath",
         "-popsize",
@@ -38,6 +38,8 @@ def run_command(alg: str, repr: str, repeat: int):
         resolve_filename(alg, repr, repeat),
         "-seed",
         str(repeat),
+        "-predefined_file",
+        "best_genotypes.json",
     ]
     if alg == "MU_COMMA_LAMBDA":
         args.extend(["-lambda_", "1.2"])
@@ -61,7 +63,7 @@ def main():
     configs = list(itertools.product(ALGS, REPRESENTATIONS, range(N_REPS)))
     configs = [c for c in configs if not resolve_filename(*c).exists()]
 
-    nproc = 1  # max(mp.cpu_count() - 2, 1)
+    nproc = 10
     print(f"Running {len(configs)} simulations on {nproc} processes...")
     with mp.Pool(nproc, initializer) as pool, tqdm.tqdm(total=len(configs)) as pbar:
         for _ in pool.imap_unordered(run_packed, configs):

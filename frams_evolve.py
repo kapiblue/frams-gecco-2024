@@ -2,6 +2,7 @@ import sys
 import random
 
 import numpy as np
+import evolvengine.predefiner
 import evolvengine.runner
 import evolvengine.types
 import evolvengine.algorithms
@@ -33,7 +34,13 @@ def main():
     randomizer = evolvengine.randomizer.Randomizer(
         probability=config.rand_prob, lib=lib, iter_max=100
     )
+    predefiner = evolvengine.predefiner.Predefiner(
+        lib=lib,
+        genformat=config.genformat,
+        gen_path=config.predefined_file,
+    )
     toolbox = evolvengine.defaults.setup_toolbox(lib, config)
+    toolbox.register("population", predefiner.get_population)
     toolbox.register("mutate", lambda x: randomizer.randomize(mutator.mutate(lib, x)))
     stats = evolvengine.defaults.setup_stats()
     stats.register("m_strength", mutator.update_strength)
