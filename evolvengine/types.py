@@ -72,6 +72,7 @@ class RunConfig:
     meta: MetaAlgorithm
     lambda_: int
     mutator_ub: float
+    temp: float
     opt_func: int
     rand_prob: float
 
@@ -198,6 +199,12 @@ class RunConfig:
             type=float,
             default=1,
             help="Upper bound for mutation strenth. Default: 1.0 (strenth will not increase)",
+        )
+        parser.add_argument(
+            "-temp",
+            type=float,
+            default=100,
+            help="Initial temperature value for simulated annealing mutator",
         )
         parser.add_argument(
             "-opt_func",
