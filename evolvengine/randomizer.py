@@ -1,4 +1,5 @@
 import random
+import logging
 
 from .types import Individual, FramsticksLibInterface
 
@@ -24,14 +25,18 @@ class Randomizer:
 
     def randomize(self, individual: Individual) -> Individual:
         if random.random() < self.probability:
-            new_genotype = self.lib.getRandomGenotype(
-                initial_genotype=individual[0][0],
-                parts_min=self.parts_min,
-                parts_max=self.parts_max,
-                neurons_min=self.neurons_min,
-                neurons_max=self.neurons_max,
-                iter_max=self.iter_max,
-                return_even_if_failed=True,
-            )
+            try:
+                new_genotype = self.lib.getRandomGenotype(
+                    initial_genotype=individual[0][0],
+                    parts_min=self.parts_min,
+                    parts_max=self.parts_max,
+                    neurons_min=self.neurons_min,
+                    neurons_max=self.neurons_max,
+                    iter_max=self.iter_max,
+                    return_even_if_failed=True,
+                )
+            except ValueError:
+                logging.error("Failed to randomize genotype")
+                return individual
             individual[0][0] = new_genotype
         return individual
