@@ -27,16 +27,14 @@ def main():
     config = evolvengine.types.RunConfig.from_args()
     lib = setup_lib(config)
     lib.TEST_FUNCTION = config.opt_func
-    mutator = evolvengine.mutator.VaryingStrengthMutator(
-        mutate_func=evolvengine.defaults.frams_mutate, upper_bound=config.mutator_ub
+    mutator = evolvengine.mutator.SimulatedAnnealingMutator(
+        mutate_func=evolvengine.defaults.frams_mutate, temperature=config.temp
     )
-    randomizer = evolvengine.randomizer.Randomizer(
-        probability=config.rand_prob, lib=lib, iter_max=100
-    )
+    randomizer = evolvengine.randomizer.Randomizer(probability=config.rand_prob, lib=lib, iter_max=100)
     toolbox = evolvengine.defaults.setup_toolbox(lib, config)
     toolbox.register("mutate", lambda x: randomizer.randomize(mutator.mutate(lib, x)))
     stats = evolvengine.defaults.setup_stats()
-    stats.register("m_strength", mutator.update_strength)
+    stats.register("m_temp", mutator.update_temperature)
     runner = evolvengine.runner.EvolutionRunner(config, toolbox, stats)
     runner.run()
 
