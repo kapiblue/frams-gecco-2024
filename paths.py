@@ -1,7 +1,6 @@
 import pathlib
 import sys
 
-
 is_win = sys.platform.startswith("win")
 
 FRAMSPY_DIR = pathlib.Path(__file__).parent.parent.resolve()
@@ -12,4 +11,4 @@ if is_win:
     FRAMLIB_DIR = "D:\\Programs\\Framsticks\\"
 else:
     INTERPRETER = "python"
-    FRAMLIB_DIR = "/home/zuzgaw/uni/I/biologically_inspired/labs/GECCO/Framsticks50rc26"
+    FRAMLIB_DIR = "/home/sbartekt/Framsticks50rc30/"

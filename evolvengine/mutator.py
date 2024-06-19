@@ -71,7 +71,9 @@ class SimulatedAnnealingMutator:
         self.mutate_func = mutate_func
         self.previous_fitness = None
 
-    def mutate(self, frame_lib: types.FramsticksLibInterface, individual: types.Individual) -> tuple[types.Individual]:
+    def mutate(
+        self, frame_lib: types.FramsticksLibInterface, individual: types.Individual
+    ) -> tuple[types.Individual]:
         individual = (individual,)
         if self.temperature > random.randint(0, 100):
             individual = self.mutate_func(frame_lib, individual[0])
@@ -81,13 +83,16 @@ class SimulatedAnnealingMutator:
         current_fitness = max(fit[0] for fit in pop_fitnesses)
         if (
             self.previous_fitness is not None
-            and self.acceptance_probability(self.previous_fitness, current_fitness) <= random.random()
+            and self.acceptance_probability(self.previous_fitness, current_fitness)
+            <= random.random()
         ):
             self.temperature *= 1 - self.cooling_rate
         self.previous_fitness = current_fitness
         return self.temperature
 
-    def acceptance_probability(self, previous_fitness: float, current_fitness: float) -> float:
+    def acceptance_probability(
+        self, previous_fitness: float, current_fitness: float
+    ) -> float:
         if current_fitness > previous_fitness:
             return 1.0
         return math.exp((current_fitness - previous_fitness) / self.temperature)

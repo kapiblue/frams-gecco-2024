@@ -208,8 +208,8 @@ class RunConfig:
         parser.add_argument(
             "-temp",
             type=float,
-            default=100,
-            help="Initial temperature value for simulated annealing mutator",
+            default=0,
+            help="Initial temperature value for simulated annealing mutator. Default: 0 (no simulated annealing)",
         )
         parser.add_argument(
             "-opt_func",
