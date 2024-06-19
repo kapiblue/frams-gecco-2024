@@ -39,8 +39,6 @@ def run_command(alg: str, repr: str, repeat: int):
         "-seed",
         str(repeat),
     ]
-    if alg == "MU_COMMA_LAMBDA":
-        args.extend(["-lambda_", "1.2"])
     result = subprocess.run(
         args,
         capture_output=True,
@@ -71,5 +69,4 @@ def main():
 
 
 if __name__ == "__main__":
-    print()
     main()
