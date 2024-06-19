@@ -80,6 +80,7 @@ class RunConfig:
     opt_func: int
     rand_prob: float
     dissimilarity_method: int
+    predefined_file: str | None = None
 
     def __post_init__(self):
         if not isinstance(self.opt, list):
@@ -228,6 +229,11 @@ class RunConfig:
             type=int,
             default=0,
             help="Method of dissimilarity calculation, default: 0 (SimilMeasureGreedy)",
+        )
+        parser.add_argument(
+            "-predefined_file",
+            default=None,
+            help="Path to the file with genotypes to load. If not given, the initial genotype will be used.", # TODO: change docs
         )
 
         args = parser.parse_args()
