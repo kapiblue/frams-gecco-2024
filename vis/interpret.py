@@ -23,6 +23,7 @@ class HistoryEntry:
     min: float
     max: float
     m_strength: float = 1.0
+    m_temp: float = 0
 
 
 @dataclasses.dataclass
