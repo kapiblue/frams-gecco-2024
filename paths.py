@@ -12,4 +12,4 @@ if is_win:
     FRAMLIB_DIR = "D:\\Programs\\Framsticks\\"
 else:
     INTERPRETER = "python"
-    FRAMLIB_DIR = "/home/sbartekt/Framsticks50rc30/"
+    FRAMLIB_DIR = "/Users/kacperdobek/Documents/Studia/Magisterskie/Semester1/BIAM/Framsticks50rc30"

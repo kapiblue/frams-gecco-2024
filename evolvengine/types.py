@@ -5,10 +5,13 @@ import dataclasses
 import enum
 import typing
 from typing import List
-
+import sys
 import deap.base
 import deap.tools
 import numpy as np
+
+sys.path.append("..")
+from FramsticksLib import DissimMethod
 
 
 class MetaAlgorithm(enum.Enum):
@@ -78,7 +81,7 @@ class RunConfig:
     mutator_ub: float
     opt_func: int
     rand_prob: float
-    dissimilarity_method: int
+    dissimilarity_method: str
 
     def __post_init__(self):
         if not isinstance(self.opt, list):
@@ -218,8 +221,9 @@ class RunConfig:
         )
         parser.add_argument(
             "-dissimilarity_method",
-            type=int,
-            default=0,
+            type=DissimMethod,
+            default="0",
+            choices=DissimMethod,
             help="Method of dissimilarity calculation, default: 0 (SimilMeasureGreedy)",
         )
 
