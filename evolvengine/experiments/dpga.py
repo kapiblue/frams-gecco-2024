@@ -29,18 +29,28 @@ def fitness_reserve(reserve_population, main_population, toolbox):
     return fitnesses
 
 
-def evaluate_main_population(main_population, toolbox) -> tuple[list, int]:
+def evaluate_main_population(
+    main_population, toolbox, all: bool = False
+) -> tuple[list, int]:
     # MAIN POPULATION: Evaluate the individuals
-    invalid_ind = [ind for ind in main_population if not ind.fitness.valid]
+    if all:
+        invalid_ind = main_population
+    else:
+        invalid_ind = [ind for ind in main_population if not ind.fitness.valid]
     fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
     for ind, fit in zip(invalid_ind, fitnesses):
         ind.fitness.values = fit
     return main_population, len(invalid_ind)
 
 
-def evaluate_reserve_population(main_population, reserve_population, toolbox) -> list:
+def evaluate_reserve_population(
+    main_population, reserve_population, toolbox, all: bool = False
+) -> list:
     # RESERVE POPULATION: Evaluate the individuals
-    invalid_ind = [ind for ind in reserve_population if not ind.fitness.valid]
+    if all:
+        invalid_ind = reserve_population
+    else:
+        invalid_ind = [ind for ind in reserve_population if not ind.fitness.valid]
     fitnesses = fitness_reserve(invalid_ind, main_population, toolbox)
     for ind, fit in zip(invalid_ind, fitnesses):
         ind.fitness.values = fit
@@ -57,9 +67,9 @@ def dpga(
     halloffame=None,
     verbose=__debug__,
 ):
-    # TODO: experiment with the parameter
+
     # in the paper: main population = 100, reserve population = 200
-    reserve_pop = 0.7
+    reserve_pop = 0.6
     n = round(reserve_pop * len(population))  # reserve population size
     m = len(population) - n  # main population size
 
@@ -122,12 +132,14 @@ def dpga(
         main_offspring += deepcopy(cross_all_offspring)
         reserve_offspring += deepcopy(cross_all_offspring)
 
-        main_offspring, evaluated2 = evaluate_main_population(main_offspring, toolbox)
+        main_offspring, evaluated2 = evaluate_main_population(
+            main_offspring, toolbox, all=True
+        )
         main_offspring.sort(key=lambda x: x.fitness.values[0], reverse=True)
         main_offspring = main_offspring[:m]
 
         reserve_offspring = evaluate_reserve_population(
-            main_population, reserve_offspring, toolbox
+            main_population, reserve_offspring, toolbox, all=True
         )
         reserve_offspring.sort(key=lambda x: x.fitness.values[0], reverse=True)
         reserve_offspring = reserve_offspring[:n]
