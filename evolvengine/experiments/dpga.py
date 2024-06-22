@@ -1,5 +1,8 @@
 import random
 from copy import deepcopy
+import dataclasses
+import json
+import time
 
 import deap.algorithms
 import deap.tools as tools
@@ -57,6 +60,22 @@ def evaluate_reserve_population(
     return reserve_population
 
 
+def save_partial_results(config, hof, log, time_taken, gen):
+    print("Saving DPGA output at generation %d to '%s'" % (gen, config.out))
+    hof_instances = [
+        {"genotype": ind[0], "fitness": ind.fitness.values} for ind in hof
+    ]
+    result = {
+        "hof": hof_instances,
+        "log": log,
+        "args": dataclasses.asdict(config),
+        "time_s": time_taken,
+        "gen": gen,
+    }
+    with open(config.out, "w") as outfile:
+        json.dump(result, outfile, default=str)
+
+
 def dpga(
     population,
     toolbox,
@@ -66,8 +85,10 @@ def dpga(
     stats=None,
     halloffame=None,
     verbose=__debug__,
+    config=None,
+    save_period=5,
 ):
-
+    time_start = time.perf_counter()
     # in the paper: main population = 100, reserve population = 200
     reserve_pop = 0.6
     n = round(reserve_pop * len(population))  # reserve population size
@@ -157,5 +178,10 @@ def dpga(
         logbook.record(gen=gen, nevals=evaluated1 + evaluated2, **record)
         if verbose:
             print(logbook.stream)
+
+        # Save partial results
+        time_taken = time.perf_counter() - time_start
+        if gen % save_period == 0:
+            save_partial_results(config, halloffame, logbook, time_taken, gen)
 
     return main_population, logbook

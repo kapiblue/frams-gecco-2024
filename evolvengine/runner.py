@@ -25,16 +25,31 @@ class EvolutionRunner:
         pop = self.toolbox.population(n=self.config.popsize)
         time_start = time.perf_counter()
         algorithm = algorithms.resolve_algorithm(self.config)
-        pop, log = algorithm(
-            pop,
-            self.toolbox,
-            cxpb=self.config.pxov,
-            mutpb=self.config.pmut,
-            ngen=self.config.generations,
-            stats=self.stats,
-            halloffame=self.hof,
-            verbose=True,
-        )
+        # Workaround for DPGA periodical saving
+        if algorithm.__name__ == "dpga":
+            pop, log = algorithm(
+                pop,
+                self.toolbox,
+                cxpb=self.config.pxov,
+                mutpb=self.config.pmut,
+                ngen=self.config.generations,
+                stats=self.stats,
+                halloffame=self.hof,
+                verbose=True,
+                config=self.config,
+                save_period=5,  # save every 5 generations
+            )
+        else:
+            pop, log = algorithm(
+                pop,
+                self.toolbox,
+                cxpb=self.config.pxov,
+                mutpb=self.config.pmut,
+                ngen=self.config.generations,
+                stats=self.stats,
+                halloffame=self.hof,
+                verbose=True,
+            )
         time_taken = time.perf_counter() - time_start
 
         print("Saving output to '%s'" % self.config.out)
