@@ -23,7 +23,7 @@ class FramsticksLibCompetition(FramsticksLib):
     FITNESS_DICT_KEY = "COGpath"  # only used for SIMPLE_FITNESS_FORMAT = False
 
     MAX_EVALUATIONS = 100_000  # 100k
-    MAX_TIME = 0.1  #60 * 60 * 1  # 1h (excluding evaluation time)
+    MAX_TIME = 60 * 60 * 1  # 1h (excluding evaluation time)
 
     TEST_FUNCTION = 3
 
