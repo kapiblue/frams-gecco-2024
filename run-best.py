@@ -93,7 +93,6 @@ def main():
     ]
     configs = list(itertools.product(best_configs, range(N_REPS)))
     configs = [(dpga, sa, rand, vs, pp, r) for (dpga, sa, rand, vs, pp), r in configs]
-    print(configs)
     configs = [c for c in configs if not resolve_filename(*c).exists()]
 
     nproc = max(mp.cpu_count() - 2, 1)
