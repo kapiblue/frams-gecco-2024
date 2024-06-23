@@ -44,7 +44,7 @@ def run_command(
         "-popsize",
         "50",
         "-generations",
-        "2000",
+        "2000" if not dpga_enabled else "500",  # DPGA is ca. 5x slower
         "-genformat",
         "0",
         "-out",
