@@ -4,16 +4,17 @@ import deap.creator
 import deap.tools
 import json
 
+
 class Predefiner:
-    def __init__(self,
-                 lib: types.FramsticksLibInterface,
-                 genformat: str,
-                 gen_path: str,
-                 ) -> None:
+    def __init__(
+        self,
+        lib: types.FramsticksLibInterface,
+        genformat: str,
+        gen_path: str,
+    ) -> None:
         self.lib = lib
         self.genformat = genformat
         self.gen_path = gen_path
-        
 
         self.genotypes = [] if gen_path is None else self.__load_genotypes()
 
@@ -38,11 +39,11 @@ class Predefiner:
         """
         pop = []
 
-        # add predefined genotypes        
+        # add predefined genotypes
         for gen in self.genotypes:
             ind = deap.creator.Individual([gen])
             pop.append(ind)
-        
+
         # fill the rest of the population with simplest genotypes
         while len(pop) < n:
             gen = self.lib.getSimplest(self.genformat)

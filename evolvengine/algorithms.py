@@ -19,5 +19,7 @@ def resolve_algorithm(
             *args, **kwargs, mu=config.popsize, lambda_=lambda_param
         )
     if config.meta == types.MetaAlgorithm.DPGA:
-        return dpga
+        return lambda *args, **kwargs: dpga(
+            *args, **kwargs, config=config, save_period=5
+        )
     raise ValueError(f"Unknown algorithm: {config.meta}")

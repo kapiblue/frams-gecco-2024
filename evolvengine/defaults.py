@@ -1,4 +1,5 @@
 import typing
+import logging
 
 import deap.base
 import deap.creator
@@ -6,6 +7,10 @@ import deap.tools
 import numpy as np
 
 from . import types
+
+
+def is_genotype_valid(genotype: str) -> bool:
+    return genotype != "/*invalid*/"
 
 
 def genotype_within_constraint(
@@ -37,6 +42,12 @@ def frams_evaluate(
 
     # individual[0] because we can't (?) have a simple str as a deap genotype/individual, only list of str.
     genotype = individual[0]
+    if not is_genotype_valid(genotype):
+        logging.error(
+            'Genotype "%s" is /*invalid*/, hence assigned low fitness: %s'
+            % (genotype, BAD_FITNESS)
+        )
+        return BAD_FITNESS
 
     data = frams_lib.evaluate([genotype])
     # print("Evaluated '%s'" % genotype, 'evaluation is:', data)
@@ -84,15 +95,22 @@ def frams_crossover(
 ) -> tuple[types.Individual, types.Individual]:
     geno1 = individual1[0]
     geno2 = individual2[0]
-    individual1[0] = frams_lib.crossOver(geno1, geno2)
-    individual2[0] = frams_lib.crossOver(geno1, geno2)
+    cross_1, cross_2 = frams_lib.crossOver(geno1, geno2), frams_lib.crossOver(
+        geno2, geno1
+    )
+    if is_genotype_valid(cross_1):
+        individual1[0] = cross_1
+    if is_genotype_valid(cross_2):
+        individual2[0] = cross_2
     return individual1, individual2
 
 
 def frams_mutate(
     frams_lib: types.FramsticksLibInterface, individual: types.Individual
 ) -> tuple[types.Individual]:
-    individual[0] = frams_lib.mutate([individual[0]])[0]
+    mutated = frams_lib.mutate([individual[0]])[0]
+    if is_genotype_valid(mutated):
+        individual[0] = mutated
     return (individual,)
 
 
@@ -111,7 +129,11 @@ def frams_getsimplest(
 def frams_dissimilarity(
     frams_lib: types.FramsticksLibInterface, genotype_list: list[str], method: int
 ) -> np.ndarray:
-    return frams_lib.dissimilarity(genotype_list, method)
+    try:
+        return frams_lib.dissimilarity(genotype_list, method)
+    except Exception as e:
+        logging.error("Dissimilarity calculation failed: %s" % e)
+        return np.zeros((len(genotype_list), len(genotype_list)))
 
 
 def setup_toolbox(
