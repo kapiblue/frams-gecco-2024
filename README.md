@@ -36,3 +36,22 @@ We developed a few mechanisms to improve the basic evolutionary algorithm from D
 
 ![Comb Results](vis/comb_results.png)
 
+### How to run the algorithm ###
+
+To run the algorithm in a competition mode, please use the following command:
+
+```bash
+python  frams_evolve.py \
+        -path FRAMSTICKS_SIMULATOR_PATH \
+        -sim "eval-allcriteria.sim;deterministic.sim;recording-body-coords.sim" \
+        -opt COGpath \
+        -popsize 50 \
+        -generations 2000 \
+        -genformat 0 \
+        -rand_prob 0.01 \
+        -mutator_ub 5.0
+```
+
+### Dependencies ###
+
+The algorithm uses no external libraries different than the standard framspy package. However, in the case of problems with a script execution, the `requirements.txt` is provided.

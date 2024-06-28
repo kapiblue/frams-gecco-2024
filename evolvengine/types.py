@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import enum
+import random
 import typing
 from typing import List
 
@@ -179,8 +180,8 @@ class RunConfig:
         parser.add_argument(
             "-seed",
             type=int,
-            default=0,
-            help="Seed for the random number generator. Default: 0",
+            default=random.randint(0, 1000000),
+            help="Seed for the random number generator. Default: random integer.",
         )
         parser.add_argument(
             "-out",
