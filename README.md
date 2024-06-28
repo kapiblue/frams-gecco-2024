@@ -2,13 +2,31 @@
 
 Repository for the 2024 Framstics GECCO competition.
 
-Competition URL: https://www.framsticks.com/gecco-competition
+Team:
+
+- Agata Żywot
+- Zuzanna Gawrysiak
+- Bartosz Stachowiak
+- Daniel Jankowski
+- Kacper Dobek
+
 
 ### Getting started
 
-1. Clone the repository into your framspy folder.
-2. Change `lib_path` in the `exp_gecco.sh` shell script.
-3. Create *logs* and *hofs* folders.
-4. Open the repository directory and run `exp_gecco.sh`.
+1. Setup the Framsticks environment according to https://www.framsticks.com/gecco-competition.
 
-The logs from each run and time measurements will be saved to logs folder. The Hall of Fame individuals will be saved to hofs folder.
+2. Clone the repository into your framspy folder.
+
+3. Run the script using the following command (for example):
+
+```bash
+python  frams_evolve.py \
+        -path FRAMSTICKS_SIMULATOR_PATH \
+        -sim "eval-allcriteria.sim;deterministic.sim;recording-body-coords-mod.sim" \
+        -opt COGpath \
+        -popsize 50 \
+        -generations 100 \
+        -genformat 0 \
+        -temp 100 \
+        -mutator_ub 5.0
+```

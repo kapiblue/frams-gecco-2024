@@ -12,8 +12,6 @@ import evolvengine.randomizer
 
 sys.path.append("..")
 
-FramsticksLibCompetition = __import__("frams-gecco-2024.FramsticksLibCompetition")
-# Use FramsticksLibCompetition instead of the default FramsticksLib
 from FramsticksLibCompetition import FramsticksLibCompetition as FramsticksLib
 
 
